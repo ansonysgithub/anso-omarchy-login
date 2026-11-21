@@ -1,0 +1,13 @@
+[Unit]
+Description=Re-enable secondary monitors after the boot splash
+# The kernel boots with video=DP-3:d video=HDMI-A-1:d so the splash only
+# shows on the ultrawide (DP-2). Bring the others back before Hyprland starts.
+After=plymouth-quit.service
+Before=display-manager.service
+
+[Service]
+Type=oneshot
+ExecStart=/bin/sh -c 'for c in card1-DP-3 card1-HDMI-A-1; do echo detect > /sys/class/drm/$c/status; done'
+
+[Install]
+WantedBy=multi-user.target
